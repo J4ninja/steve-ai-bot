@@ -2,6 +2,13 @@ const { SlashCommandBuilder } = require('discord.js');
 const { Jimp, loadFont } = require("jimp");
 const { SANS_64_BLACK } = require("jimp/fonts");
 
+function wrapText(text, maxLength = 15) {
+    const lines = [];
+    for (let i = 0; i < text.length; i += maxLength) {
+        lines.push(text.slice(i, i + maxLength));
+    }
+    return lines;
+}
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -28,13 +35,25 @@ module.exports = {
         const image = await Jimp.read("./images/tradeoffer.jpg"); // You can replace this with a custom image
         
         const font = await loadFont(SANS_64_BLACK);
-        const iReceiveX = 40;
-        const iReceiveY = 1100;
-        const uReceiveX = iReceiveX + 750;
-        const uReceiveY = iReceiveY;
+        let iReceiveX = 40;
+        let iReceiveY = 1000;
+        let uReceiveX = iReceiveX + 715;
+        let uReceiveY = iReceiveY;
 
-        image.print({font,x:iReceiveX,y:iReceiveY,text:iReceiveText});
-        image.print({font,x:uReceiveX,y:uReceiveY,text:youReceiveText});
+        const iReceiveWrapped = wrapText(iReceiveText);
+        const youReceiveWrapped = wrapText(youReceiveText);
+
+        // Add wrapped text to image for "I receive"
+        iReceiveWrapped.forEach(line => {
+            image.print({font, x:iReceiveX, y:iReceiveY, text:line});
+            iReceiveY += 50;  // Increase vertical position for next line
+        });
+
+        // Add wrapped text to image for "You receive"
+        youReceiveWrapped.forEach(line => {
+            image.print({font, x:uReceiveX, y:uReceiveY, text:line});
+            uReceiveY += 50;  // Increase vertical position for next line
+        });
         // Save the image with text added, or send it back in the interaction
         const buffer = await image.getBuffer("image/jpeg");
         
