@@ -13,7 +13,6 @@ client.once(Events.ClientReady, (c) => {
     console.log(`${c.user.tag} is online.`);
 });
 
-
 client.on(Events.InteractionCreate, interaction => {
     if(!interaction.isChatInputCommand()) {
         return;
