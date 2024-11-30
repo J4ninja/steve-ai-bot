@@ -1,12 +1,15 @@
 const fs = require("node:fs");
 const {Client, Events, SlashCommandBuilder, GatewayIntentBits, Collection} = require('discord.js');
-const {token} = require('./config.json');
+const {token, clientId, guildId} = require('./config.json');
+const {Routes} = require('discord.js');
+const { REST } = require('@discordjs/rest')
 
-const client = new Client({intents: [GatewayIntentBits.Guilds]});
+const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildVoiceStates]});
 
 client.commands = getCommands("./commands");
 
 client.once(Events.ClientReady, (c) => {
+    registerCommands();
     console.log(`${c.user.tag} is online.`);
 });
 
@@ -64,5 +67,25 @@ function getFiles(dir) {
     return commandFiles;
 }
 
+
+// Register commands
+async function registerCommands() {
+    let commands = [];
+    const commandFiles = getFiles("./commands");
+
+    for (const file of commandFiles) {
+        const command = require(file);
+        commands.push(command.data.toJSON());
+    }
+
+    const rest = new REST({ version: "10" }).setToken(token);
+
+    try {
+        await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands });
+        console.log("Successfully deployed commands!");
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
