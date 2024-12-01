@@ -1,6 +1,6 @@
 const fs = require("node:fs");
 const {Client, Events, GatewayIntentBits, Collection} = require('discord.js');
-const {token, clientId} = require('./config.json');
+const {token, clientId, guildId} = require('./config.json');
 const {Routes} = require('discord.js');
 const { REST } = require('@discordjs/rest')
 
@@ -80,7 +80,7 @@ async function registerCommands() {
     const rest = new REST({ version: "10" }).setToken(token);
 
     try {
-        await rest.put(Routes.applicationCommands(clientId), { body: commands });
+        await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands });
         console.log("Successfully deployed commands!");
     } catch (error) {
         console.error(error);
