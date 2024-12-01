@@ -13,15 +13,17 @@ module.exports = {
                 .setDescription("Choose a specific voicemail")
                 .setRequired(false)
                 .addChoices(
-                    { name: 'Happy Bday Sthef!', value: "HappyBdySthef.m4a" },
+                    { name: 'Steve doing Karoake!', value: "SteveSinging.m4a" },
                     { name: 'Everyone is a Bitch', value: "YouABitch.m4a" },
                     { name: 'Water Broke', value: "WaterBroke.m4a" },
                     { name: 'Gay Shit My N', value: "GayShitNig.m4a" },
+                    { name: 'Steve gets Raped and taps out!', value: "SteveTapout.m4a" },
                     { name: 'Breakup with John', value: "JohnBreakUp.m4a" },
                     { name: 'Get On!', value: "GetOn.m4a" },
                     { name: 'Help on GTA!', value: "GTA.m4a" },
                     { name: 'Fag Nig', value: "FagNig.m4a" },
                     { name: 'Soft Boy Stevie', value: "SoftBoySteve.m4a" },
+                    { name: 'Happy Bday Sthef!', value: "HappyBdySthef.m4a" },
                 )
         ),
 
