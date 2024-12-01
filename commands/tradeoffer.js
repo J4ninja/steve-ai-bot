@@ -31,6 +31,9 @@ module.exports = {
         const iReceiveText = interaction.options.getString('i_receive');
         const youReceiveText = interaction.options.getString('you_receive');
 
+        // Defer the reply to acknowledge the user's request while processing the image
+        await interaction.deferReply();
+
         // Create a new blank image or load an existing background image
         const image = await Jimp.read("./images/tradeoffer.jpg"); // You can replace this with a custom image
         
@@ -54,10 +57,12 @@ module.exports = {
             image.print({font, x:uReceiveX, y:uReceiveY, text:line});
             uReceiveY += 50;  // Increase vertical position for next line
         });
+
         // Save the image with text added, or send it back in the interaction
         const buffer = await image.getBuffer("image/jpeg");
         
-        await interaction.reply({
+        // Edit the deferred reply with the generated image
+        await interaction.editReply({
             content: 'Here is your trade offer:',
             files: [{
                 attachment: buffer,

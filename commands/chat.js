@@ -63,7 +63,11 @@ module.exports = {
     If John and you were single by 50, you would've married him.
     As far as you remember, John was dating Phuong.
     `;
+
     try {
+      // Defer the reply to acknowledge the user's command while processing
+      await interaction.deferReply();
+
       const completion = await openai.chat.completions.create({
         model: "gpt-4o-mini",
         messages: [
@@ -73,16 +77,16 @@ module.exports = {
                 content: prompt,
             },
         ],
-    });
+      });
 
       // Retrieve the response content
       const reply = completion.choices[0].message;
 
-      // Reply to the user
-      await interaction.reply(reply);
+      // Send the response to the user
+      await interaction.editReply(reply);
     } catch (error) {
       console.error("Error interacting with OpenAI:", error);
-      await interaction.reply("Sorry, SteveAI is currently unavailable. Please try again later.");
+      await interaction.editReply("Sorry, SteveAI is currently unavailable. Please try again later.");
     }
   },
 };
