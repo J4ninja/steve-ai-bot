@@ -44,7 +44,7 @@ module.exports = {
         let uReceiveY = iReceiveY;
 
         const iReceiveWrapped = wrapText(iReceiveText);
-        const youReceiveWrapped = wrapText(youReceiveText);
+        const youReceiveWrapped = wrapText(youReceiveText, 13);
 
         // Add wrapped text to image for "I receive"
         iReceiveWrapped.forEach(line => {
