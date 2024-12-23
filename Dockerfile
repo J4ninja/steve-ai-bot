@@ -1,8 +1,9 @@
 
-FROM node:20
+FROM node:20-alpine
 
-RUN apt-get update && \
-    apt-get install -y ffmpeg 
+# Install ffmpeg on Alpine
+RUN apk update && \
+    apk add --no-cache ffmpeg
 
 WORKDIR /steve-ai-bot
 
