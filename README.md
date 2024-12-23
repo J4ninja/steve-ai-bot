@@ -10,6 +10,7 @@
 2. jimp v1.6
 3. openai v4.73
 
+
 ### Configuration
 You will need to create a `config.json` file in the project dir and fill in these required variables.
 
@@ -22,9 +23,8 @@ You will need to create a `config.json` file in the project dir and fill in thes
     }   
 
 
-### Running the bot
-1. From the project dir run `npm install` to install node_modules
-2. run the command `node .` to start the app
-3. Verify that the bot is online in the server and has latest slash commands
+### Running the bot with Docker
+0. Prerequisite (docker and docker compose installed)
+1. Run `docker-compose up --build` from project dir to build the image with necessary dependencies and run the container
   
    

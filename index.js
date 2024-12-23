@@ -1,5 +1,5 @@
 const fs = require("node:fs");
-const {Client, Events, GatewayIntentBits, Collection} = require('discord.js');
+const {Client, Events, GatewayIntentBits, Collection, ActivityType} = require('discord.js');
 const {token, clientId, guildId} = require('./config.json');
 const {Routes} = require('discord.js');
 const { REST } = require('@discordjs/rest')
@@ -8,10 +8,15 @@ const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits
 
 client.commands = getCommands("./commands");
 
+
 client.once(Events.ClientReady, (c) => {
     registerCommands();
+    client.user.setPresence({
+        activities: [{ name: `over everyone`, type: ActivityType.Watching }]
+      });
     console.log(`${c.user.tag} is online.`);
 });
+
 
 client.on(Events.InteractionCreate, interaction => {
     if(!interaction.isChatInputCommand()) {
