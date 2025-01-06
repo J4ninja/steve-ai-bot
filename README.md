@@ -12,15 +12,15 @@
 
 
 ### Configuration
-You will need to create a `config.json` file in the project dir and fill in these required variables.
+You will need to create a `.env` file in the project dir and fill in these required variables.
 
-    {
-      "token": "INSERT DISCORD LOGIN TOKEN",
-      "clientId": "INSERT DISCORD CLIENT ID",
-      "guildId": "INSERT SERVER ID",
-      "organizationId": "INSERT OPENAI ORGANIAZATION ID",
-      "OPENAI_API_KEY": "INSERT OPENAI API KEY"
-    }   
+   
+      TOKEN=
+      CLIENT_ID=
+      GUILD_ID=
+      ORGANIZATION_ID=
+      OPENAI_API_KEY=
+
 
 
 ### Running the bot with Docker

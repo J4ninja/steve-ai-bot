@@ -1,10 +1,12 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { OpenAI } = require("openai"); 
-const { OPENAI_API_KEY, organizationId } = require("../config.json");
+require('dotenv').config();
+const {OPENAI_API_KEY, ORGANIZATION_ID} = process.env;
+
 
 // Set up OpenAI configuration
 const openai = new OpenAI({
-    organization: organizationId,
+    organization: ORGANIZATION_ID,
     apiKey: OPENAI_API_KEY
 });
 

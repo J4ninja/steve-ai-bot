@@ -2,7 +2,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const {Routes} = require('discord.js');
 const { REST } = require('@discordjs/rest')
-const {token, clientId, guildId} = require('./config.json');
+require('dotenv').config()
+const {TOKEN, CLIENT_ID, GUILD_ID} = process.env;
 
 
 function getFiles(dir) {
@@ -39,9 +40,9 @@ for(const file of commandFiles) {
     commands.push(command.data.toJSON());
 }
 
-const rest = new REST({version: "10"}).setToken(token);
+const rest = new REST({version: "10"}).setToken(TOKEN);
 
-rest.put(Routes.applicationGuildCommands(clientId, guildId), {body: commands})
+rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), {body: commands})
     .then(() => {
         console.log("Successfully deployed commands!");
     })

@@ -1,6 +1,7 @@
 const fs = require("node:fs");
 const {Client, Events, GatewayIntentBits, Collection, ActivityType} = require('discord.js');
-const {token, clientId, guildId} = require('./config.json');
+require('dotenv').config();
+const {TOKEN, CLIENT_ID, GUILD_ID} = process.env;
 const {Routes} = require('discord.js');
 const { REST } = require('@discordjs/rest')
 
@@ -33,7 +34,7 @@ client.on(Events.InteractionCreate, interaction => {
     }
 });
 
-client.login(token);
+client.login(TOKEN);
 
 function getCommands(dir) {
     let commands = new Collection();
@@ -82,10 +83,10 @@ async function registerCommands() {
         commands.push(command.data.toJSON());
     }
 
-    const rest = new REST({ version: "10" }).setToken(token);
+    const rest = new REST({ version: "10" }).setToken(TOKEN);
 
     try {
-        await rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: commands });
+        await rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: commands });
         console.log("Successfully deployed commands!");
     } catch (error) {
         console.error(error);
