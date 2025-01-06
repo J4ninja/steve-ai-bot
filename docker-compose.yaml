@@ -3,5 +3,5 @@ services:
   app:
     build: .
     volumes:
-      - ./config.json:/steve-ai-bot/config.json  # Mount config.json from host to container
+      - ./.env:/steve-ai-bot/.env  # Mount .env from host to container
     restart: always  # Ensure the container restarts on failure
