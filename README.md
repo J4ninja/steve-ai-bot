@@ -23,7 +23,7 @@ You will need to create a `.env` file in the project dir and fill in these requi
 
 
 
-### Running the bot with Docker
+### Running the bot locally with Docker compose
 0. Prerequisite (docker and docker compose installed)
 1. Run `docker-compose up --build` from project dir to build the image with necessary dependencies and run the container
   
