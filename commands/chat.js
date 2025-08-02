@@ -7,11 +7,18 @@ const { ChatPromptTemplate } = require("@langchain/core/prompts");
 const { StringOutputParser } = require("@langchain/core/output_parsers");
 
 
-// Set up OpenAI configuration
-const openai = new OpenAI({
-    organization: ORGANIZATION_ID,
-    apiKey: OPENAI_API_KEY
-});
+// // Set up OpenAI configuration
+// const openai = new OpenAI({
+//     organization: ORGANIZATION_ID,
+//     apiKey: OPENAI_API_KEY
+// });
+
+
+
+let state = {
+  "messages": [],
+};
+
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -93,32 +100,36 @@ module.exports = {
     Do not reference the 'context' as 'context' explicitly.
     `;
 
-    // const promptTemplate = ChatPromptTemplate.fromMessages([
-    //   ["system", systemMessage],
-    //   ["user", "<context>\n{context}</context>"],
-    //   ["ai", "Thank you. I will not restart the conversation and will abide by the context."]
-    //   ["placeholder", "{messages}"]
-    // ]);
-
-     const promptTemplate = ChatPromptTemplate.fromMessages([
+    const promptTemplate = ChatPromptTemplate.fromMessages([
       ["system", systemMessage],
-      ["user", "{prompt}"],
+      ["placeholder", "{messages}"]
     ]);
 
+    //  const promptTemplate = ChatPromptTemplate.fromMessages([
+    //   ["system", systemMessage],
+    //   ["user", "{prompt}"],
+    // ]);
+
     const chain = promptTemplate.pipe(model).pipe(new StringOutputParser());
-
-    // state = {
-    //   "messages": [],
-    //   "context": new_context,
-    // }
-
 
     try {
       // Defer the reply to acknowledge the user's command while processing
       await interaction.deferReply();
 
-      // Retrieve the response content
-      const response = await chain.invoke({prompt: prompt});
+      // add latest message to state
+      state.messages.push(["human", prompt]);
+      if (state.messages.length > 6) {
+        state.messages = state.messages.slice(-3);
+      }
+
+      // Retrieve the response content and update state
+      const response = await chain.invoke({messages: state.messages});
+      state.messages.push(["ai", response]);
+
+      // truncate history to only last 3 messages and 3 reponses
+      if (state.messages.length > 6) {
+        state.messages = state.messages.slice(-3);
+      }
 
       // Send the response to the user
       await interaction.editReply(response);
