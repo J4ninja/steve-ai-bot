@@ -11,6 +11,8 @@
   "description": "",
   "dependencies": {
     "@discordjs/voice": "^0.18.0",
+    "@langchain/core": "^0.3.66",
+    "@langchain/openai": "^0.6.3",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
     "jimp": "^1.6.0",

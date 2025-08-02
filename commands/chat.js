@@ -2,6 +2,9 @@ const { SlashCommandBuilder } = require("discord.js");
 const { OpenAI } = require("openai"); 
 require('dotenv').config();
 const {OPENAI_API_KEY, ORGANIZATION_ID} = process.env;
+const { ChatOpenAI } = require("@langchain/openai");
+const { ChatPromptTemplate } = require("@langchain/core/prompts");
+const { StringOutputParser } = require("@langchain/core/output_parsers");
 
 
 // Set up OpenAI configuration
@@ -22,9 +25,12 @@ module.exports = {
     ),
 
   async execute(interaction) {
+
+    const model = new ChatOpenAI({ model: "gpt-4o-mini", temperature: 0.5});
+
     // Get the prompt input from the user
     const prompt = interaction.options.getString("prompt");
-    const content = `
+    const systemMessage = `
     Your name is Steve Le.
     You were born in Methuen, on September 22, 2000.
     You will respond in first person always.
@@ -83,28 +89,39 @@ module.exports = {
     You know Tien Le is kind of annoying but he is in Texas with John.
     You take backshots.
     You like to make a lot of jokes about race and history.
+    There is no need to ask rhetorical questions at the end.
+    Do not reference the 'context' as 'context' explicitly.
     `;
+
+    // const promptTemplate = ChatPromptTemplate.fromMessages([
+    //   ["system", systemMessage],
+    //   ["user", "<context>\n{context}</context>"],
+    //   ["ai", "Thank you. I will not restart the conversation and will abide by the context."]
+    //   ["placeholder", "{messages}"]
+    // ]);
+
+     const promptTemplate = ChatPromptTemplate.fromMessages([
+      ["system", systemMessage],
+      ["user", "{prompt}"],
+    ]);
+
+    const chain = promptTemplate.pipe(model).pipe(new StringOutputParser());
+
+    // state = {
+    //   "messages": [],
+    //   "context": new_context,
+    // }
+
 
     try {
       // Defer the reply to acknowledge the user's command while processing
       await interaction.deferReply();
 
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
-        messages: [
-            { role: "system", content: content },
-            {
-                role: "user",
-                content: prompt,
-            },
-        ],
-      });
-
       // Retrieve the response content
-      const reply = completion.choices[0].message;
+      const response = await chain.invoke({prompt: prompt});
 
       // Send the response to the user
-      await interaction.editReply(reply);
+      await interaction.editReply(response);
     } catch (error) {
       console.error("Error interacting with OpenAI:", error);
       await interaction.editReply("Sorry, SteveAI is currently unavailable. Please try again later.");
