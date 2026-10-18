@@ -19,18 +19,19 @@ client.once(Events.ClientReady, (c) => {
 });
 
 
-client.on(Events.InteractionCreate, interaction => {
+client.on(Events.InteractionCreate, async interaction => {
     if(!interaction.isChatInputCommand()) {
         return;
     }
 
     let command = client.commands.get(interaction.commandName);
+    if (!command) return;
 
     try {
-        if(interaction.replied) return;
-        command.execute(interaction);
+        if(interaction.replied || interaction.deferred) return;
+        await command.execute(interaction);
     } catch(error) {
-        console.error(error);
+        console.error(`Error executing ${interaction.commandName}:`, error);
     }
 });
 
