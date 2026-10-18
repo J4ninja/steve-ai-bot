@@ -1,5 +1,5 @@
 
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Install ffmpeg on Alpine
 RUN apk update && \
