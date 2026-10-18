@@ -68,6 +68,10 @@ module.exports = {
                 adapterCreator: guild.voiceAdapterCreator,
             });
 
+            connection.on('debug', message => {
+                console.log('[Voice Debug]:', message);
+            });
+
             connection.on('error', error => {
                 console.error('[Connection Error]:', error);
             });
